@@ -12,6 +12,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import com.hazelcast.config.Config;
+import com.hazelcast.config.XmlConfigBuilder;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
@@ -57,11 +58,35 @@ public class CApplication extends ResourceConfig {
         
         strRunningPath = mainServletContext.getRealPath( SystemConstants._Dir_WEB_INF ) + File.separator;
         
-        Config serverConfig = new Config();
+        Config serverConfig = null;
         
-        serverConfig.setConfigurationFile( new File( strRunningPath + SystemConstants._Dir_Config + File.separator + "hazelcast.xml" ) );
+        try {
+            
+            serverConfig = new XmlConfigBuilder( strRunningPath + SystemConstants._Dir_Config + "hazelcast.xml" ).build();
+            
+        } 
+        catch ( Exception e) {
+
+            e.printStackTrace();
+            
+        }
         
-        hazelcastInstance = Hazelcast.newHazelcastInstance( serverConfig );
+        System.out.println( "******************************************************************" );
+
+        System.out.println( strRunningPath + SystemConstants._Dir_Config  + "hazelcast.xml" );
+
+        System.out.println( "******************************************************************" );
+        
+        if ( serverConfig != null ) {  
+        
+            hazelcastInstance = Hazelcast.newHazelcastInstance( serverConfig );
+        
+        }
+        else {
+            
+            hazelcastInstance = Hazelcast.newHazelcastInstance();
+            
+        }
 
         random = new Random();
         
