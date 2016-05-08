@@ -1,5 +1,7 @@
 package hazelcast.application;
 
+import hazelcast.common.SystemConstants;
+
 import java.io.File;
 import java.util.Random;
 
@@ -15,10 +17,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 
 public class CApplication extends ResourceConfig {
-    
-    public static final String _Dir_WEB_INF = "WEB-INF" + File.separator;
-
-    public static final String _Dir_Config = "config" + File.separator;
     
     protected static ServletContext mainServletContext = null;
     
@@ -57,11 +55,11 @@ public class CApplication extends ResourceConfig {
 
         mainServletContext = servletContext;
         
-        strRunningPath = mainServletContext.getRealPath( _Dir_WEB_INF ) + File.separator;
+        strRunningPath = mainServletContext.getRealPath( SystemConstants._Dir_WEB_INF ) + File.separator;
         
         Config serverConfig = new Config();
         
-        serverConfig.setConfigurationFile( new File( strRunningPath + _Dir_Config + File.separator + "hazelcast.xml" ) );
+        serverConfig.setConfigurationFile( new File( strRunningPath + SystemConstants._Dir_Config + File.separator + "hazelcast.xml" ) );
         
         hazelcastInstance = Hazelcast.newHazelcastInstance( serverConfig );
 
