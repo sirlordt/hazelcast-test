@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <!-- 
+  <session-factory name="GPSTrackerDBSessionFactory">
+   -->
+  <session-factory>
+
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.isolation">2</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/SMSGatewayDB</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">rafael</property>
+    <property name="show_sql">true</property>
+
+    <property name="hibernate.c3p0.min_size">5</property>
+    <property name="hibernate.c3p0.max_size">50</property>
+    <property name="hibernate.c3p0.timeout">300</property>
+    <property name="hibernate.c3p0.max_statements">50</property>
+    <property name="hibernate.c3p0.idle_test_period">3000</property>
+
+    <!--
+
+    inserted directed on code on class CServiceModuleSystem.java method name customInitConfigServiceModule line 55
+
+    <mapping class="coreapi.system.database.datamodels.TblAction" />
+    <mapping class="coreapi.system.database.datamodels.TblActionRole" />
+    <mapping class="coreapi.system.database.datamodels.TblDevice" />
+    <mapping class="coreapi.system.database.datamodels.TblGroup" />  
+    <mapping class="coreapi.system.database.datamodels.TblGroupRole" />
+    <mapping class="coreapi.system.database.datamodels.TblModule" />
+    <mapping class="coreapi.system.database.datamodels.TblModuleConfig" />
+    <mapping class="coreapi.system.database.datamodels.TblModuleConfigGroupAccess" />
+    <mapping class="coreapi.system.database.datamodels.TblModuleConfigOperatorAccess" />
+    <mapping class="coreapi.system.database.datamodels.TblOperator" />
+    <mapping class="coreapi.system.database.datamodels.TblPrivilege" />
+    <mapping class="coreapi.system.database.datamodels.TblRestriction" />
+    <mapping class="coreapi.system.database.datamodels.TblRole" />
+    <mapping class="coreapi.system.database.datamodels.TblSessionAlive" />
+     
+    -->
+
+    <mapping class="smsgateway.database.datamodels.TblShortMessageQueue" />
+
+    <!-- <mapping resource="query.hbm.xml" /> -->
+
+  </session-factory>
+
+</hibernate-configuration>

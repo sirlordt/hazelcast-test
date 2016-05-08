@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast-client xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <network>
+    
+        <cluster-members>
+        
+            <address>127.0.0.1:7000</address>
+        
+        </cluster-members>
+        
+    </network>
+        
+    <group>
+    
+        <name>configured-from-xml</name>
+        <password>1234</password>
+    
+    </group>
+    
+</hazelcast-client>

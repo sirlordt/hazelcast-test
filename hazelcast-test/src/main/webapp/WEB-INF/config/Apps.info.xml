@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<appinfo>
+   
+  <versions>
+   
+    <app>
+      
+      <name>SMSGateway</name>
+      <platform>android</platform>
+      <version>1.0</version>
+      <publish_date>16/03/2016</publish_date>
+      <mandatory>1</mandatory>
+      <location>http://weknock-tech.com:8080/downloads/android/${versions.app(0).name}/${versions.app(0).version}/SMSGateway.apk</location>
+      <changelog>http://weknock-tech.com:8080/downloads/android/${versions.app(0).name}/${versions.app(0).version}/changelog.txt</changelog>
+      
+    </app>
+
+    <app>
+      
+      <name>SMSGateway</name>
+      <platform>ios</platform>
+      <version>1.0</version>
+      <publish_date>16/03/2016</publish_date>
+      <mandatory>1</mandatory>
+      <location>http://weknock-tech.com:8080/downloads/ios/${versions.app(1).name}/${versions.app(1).version}/SMSGateway.ipa</location>
+      <changelog>http://weknock-tech.com:8080/downloads/ios/${versions.app(1).name}/${versions.app(1).version}/changelog.txt</changelog>
+      
+    </app>
+ 
+  </versions>
+ 
+</appinfo>

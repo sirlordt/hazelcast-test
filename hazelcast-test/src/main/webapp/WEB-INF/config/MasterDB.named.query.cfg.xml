@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+  <!-- 
+    SQLQuery sqlQuery = ( ( SQLQuery ) dbConnection.getNamedQuery( SystemConstants._Named_Query_getLastPositionsForAllUsers ) ).addEntity( TblDevice.class ).addScalar( SystemConstants._Field_FirstName, new StringType() ).addScalar( SystemConstants._Field_LastName, new StringType() );
+
+    @SuppressWarnings( "unchecked" )
+    List<Object[]> resultRows = sqlQuery.list();
+
+   -->
+
+  <!-- **************************** Start system query *********************************** -->
+
+  <!-- Start of Query for Entity tblSystemConfig -->
+
+  <sql-query name="getSystemConfigEntry">
+    <return alias="system" class="coreapi.system.database.datamodels.TblSystemConfig" />
+    <![CDATA[Select * From tblSystemConfig Where ( Id Like :Id Or 1 = :IdOptional )]]>
+  </sql-query>
+
+  <!-- Start of Query for Entity tblSystemConfig -->
+
+  <!-- Start of Query for Entity Restriction -->
+
+  <sql-query name="getOperatorRestriction">
+    <return alias="restriction" class="coreapi.system.database.datamodels.TblRestriction" />
+    <![CDATA[Select * From tblRestriction A Where A.IdAction = :IdAction And A.IdOperator = :IdOperator]]>
+  </sql-query>
+
+  <sql-query name="checkRestriction">
+    <![CDATA[Select A.ActionId From tblRestriction As A Inner Join tblAction B On B.Id = A.ActionId Where A.OperatorId = :OperatorId And B.ActionData = :ActionData]]>
+  </sql-query>
+
+  <sql-query name="getRestrictionList">
+    <return alias="restriction" class="coreapi.system.database.datamodels.TblAction" />
+    <![CDATA[Select C.*, D.DisabledAtDate As ModuleDisabledAtDate, D.DisabledAtTime As ModuleDisabledAtTime From tblRestriction As A Inner Join tblOperator As B On B.Id = A.OperatorId Inner Join tblAction As C On C.Id = A.ActionId Inner Join tblModule As D On D.Id = C.ModuleId Where B.Id = :OperatorId]]>
+  </sql-query>
+
+  <sql-query name="getRestrictionListCount">
+    <return alias="restriction" class="coreapi.system.database.datamodels.TblAction" />
+    <![CDATA[Select Count( C.Id ) As Count From tblRestriction As A Inner Join tblOperator As B On B.Id = A.OperatorId Inner Join tblAction As C On C.Id = A.ActionId Inner Join tblModule As D On D.Id = C.ModuleId Where B.Id = :OperatorId]]>
+  </sql-query>
+
+  <!-- End of Query for Entity Restriction -->
+
+  <!-- Start of Query for Entity tblPrivilege -->
+
+  <sql-query name="getGroupPrivilege">
+    <return alias="privilege" class="coreapi.system.database.datamodels.TblPrivilege" />
+    <![CDATA[Select * From tblPrivilege Where ActionId = :ActionId And GroupId = :GroupId]]>
+  </sql-query>
+
+  <sql-query name="checkPrivilege">
+    <![CDATA[Select A.ActionId From tblPrivilege As A Inner Join tblAction B On B.Id = A.ActionId Where A.GroupId = :GroupId And B.ActionData = :ActionData]]>
+  </sql-query>
+
+  <sql-query name="getPrivilegeList">
+    <return alias="privilege" class="coreapi.system.database.datamodels.TblAction" />
+    <![CDATA[Select A.*, B.DisabledAtDate As ModuleDisabledAtDate, B.DisabledAtTime As ModuleDisabledAtTime From tblAction As A Inner Join tblModule As B On B.Id = A.ModuleId Left Outer Join tblPrivilege As C On C.ActionId = A.Id Left Outer Join tblGroup As D On D.Id = C.GroupId Left Outer Join tblOperator As E On E.GroupId = D.Id Where ( A.AccessType = 3 And E.Id = :OperatorId ) Or ( A.AccessType = 1 Or A.AccessType = 2 ) Order By B.Id, A.CreationOrder]]>
+  </sql-query>
+
+  <sql-query name="getPrivilegeListCount">
+    <![CDATA[Select Count( A.Id ) As Count From tblAction As A Inner Join tblModule As B On B.Id = A.ModuleId Left Outer Join tblPrivilege As C On C.ActionId = A.Id Left Outer Join tblGroup As D On D.Id = C.GroupId Left Outer Join tblOperator As E On E.GroupId = D.Id Where ( A.AccessType = 3 And E.Id = :OperatorId ) Or ( A.AccessType = 1 Or A.AccessType = 2 ) Order By B.Id, A.CreationOrder]]>
+  </sql-query>
+  
+  <!--  <![CDATA[Select D.*, E.DisabledAtDate As ModuleDisabledAtDate, E.DisabledAtTime As ModuleDisabledAtTime From tblPrivilege As A Inner Join tblGroup As B On A.GroupId = B.Id Inner Join tblOperator As C On C.GroupId = B.Id Inner Join tblAction As D On D.Id = A.ActionId Inner Join tblModule As E On E.Id = D.ModuleId Where C.Id = :OperatorId]]>  -->
+  <!-- End of Query for Entity tblPrivilege -->
+
+  <!-- Start of Query for Entity tblGroup -->
+
+  <sql-query name="getGroupById">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select * From tblGroup Where Id = :Id]]>
+  </sql-query>
+
+  <sql-query name="getGroupByName">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select * From tblGroup Where Name = :Name]]>
+  </sql-query>
+
+  <sql-query name="searchGroups">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select A.* From tblGroup A Where A.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <sql-query name="searchGroupCount">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select Count( A.Id ) As Count From tblGroup A Where ( A.Name Like :Name Or 1 = :NameOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.CreatedAtTime = :CreatedAtTime Or 1 = :CreatedAtTimeOptional ) And ( A.UpdatedAtDate = :UpdatedAtDate Or 1 = :UpdatedAtDateOptional ) And ( A.UpdatedAtTime = :UpdatedAtTime Or 1 = :UpdatedAtTimeOptional ) And ( A.DisabledAtDate = :DisabledAtDate Or 1 = :DisabledAtDateOptional ) And ( A.DisabledAtTime = :DisabledAtTime Or 1 = :DisabledAtTimeOptional ) And ( 1 = :DisabledOptional Or ( 0 = :Disabled And ( A.DisabledAtDate Is Null Or A.DisabledAtTime Is Null ) ) Or ( 1 = :Disabled And ( A.DisabledAtDate Is Not Null Or A.DisabledAtTime Is Not Null ) ) )]]>
+  </sql-query>
+
+  <sql-query name="searchGroup">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select A.* From tblGroup A Where ( A.Name Like :Name Or 1 = :NameOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.CreatedAtTime = :CreatedAtTime Or 1 = :CreatedAtTimeOptional ) And ( A.UpdatedAtDate = :UpdatedAtDate Or 1 = :UpdatedAtDateOptional ) And ( A.UpdatedAtTime = :UpdatedAtTime Or 1 = :UpdatedAtTimeOptional ) And ( A.DisabledAtDate = :DisabledAtDate Or 1 = :DisabledAtDateOptional ) And ( A.DisabledAtTime = :DisabledAtTime Or 1 = :DisabledAtTimeOptional ) And ( 1 = :DisabledOptional Or ( 0 = :Disabled And ( A.DisabledAtDate Is Null Or A.DisabledAtTime Is Null ) ) Or ( 1 = :Disabled And ( A.DisabledAtDate Is Not Null And A.DisabledAtTime Is Not Null ) ) )]]>
+  </sql-query>
+  
+  <sql-query name="getGroupByNameAndDistinctId">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select * From tblGroup Where Name = :Name and Id <> :Id]]>
+  </sql-query>
+
+  <sql-query name="getConnectedGroupList">
+    <return alias="group" class="coreapi.system.database.datamodels.TblGroup" />
+    <![CDATA[Select C.*, Count( C.Id ) As Count From tblOperator As A Inner Join tblSessionAlive As B On B.OperatorId = A.Id Inner Join tblGroup C On C.Id = A.GroupId Where ( TIMESTAMP( B.UpdatedAtDate, B.UpdatedAtTime ) >= DATE_SUB( NOW(), INTERVAL 5 MINUTE ) ) And B.LoggedOutAtDate Is Null And B.LoggedOutAtTime Is Null Group By C.Id]]>
+  </sql-query>
+  <!-- End of Query for Entity tblGroup -->
+
+  <!-- Start of Query for Entity tblGroupConfig -->
+
+  <sql-query name="getGroupConfigEntry">
+    <return alias="module" class="coreapi.system.database.datamodels.TblGroupConfig" />
+    <![CDATA[Select * From tblGroupConfig Where ( Id Like :Id Or 1 = :IdOptional ) And GroupId = :GroupId]]>
+  </sql-query>
+
+  <!-- Start of Query for Entity tblGroupConfig -->
+
+  <!-- Start of Query for Entity tblOperator -->
+
+  <sql-query name="getOperatorById">
+    <return alias="operator" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select * From tblOperator Where Id = :Id]]>
+  </sql-query>
+
+  <sql-query name="getOperatorByNameAndDisabledIsNull">
+    <return alias="operator" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select * From tblOperator As A Inner Join tblGroup As B On B.Id = A.GroupId Where A.Name = :Name And A.DisabledAtDate Is null And A.DisabledAtTime Is Null And B.DisabledAtDate Is null And B.DisabledAtTime Is Null]]>
+  </sql-query>
+
+  <sql-query name="getOperatorByNameAndDistinctId">
+    <return alias="operator" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select * From tblOperator Where Name = :Name and Id <> :Id]]>
+  </sql-query>
+
+  <sql-query name="getOperatorByName">
+    <return alias="operator" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select * From tblOperator Where Name = :Name]]>
+  </sql-query>
+  
+  <sql-query name="getConnectedOperatorList">
+    <return alias="operator" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select A.*, B.SecurityTokenId, B.UpdatedAtDate As LastSessionUpdateAtDate, B.UpdatedAtTime As LastSessionUpdateAtTime, C.Id As DeviceId, C.ModelOrVersion, C.ModelOrVersionDescription From tblOperator As A Inner Join tblSessionAlive As B On B.OperatorId = A.Id Left Outer Join tblDevice As C on C.SecurityTokenId = B.SecurityTokenId Where ( TIMESTAMP( B.UpdatedAtDate, B.UpdatedAtTime ) >= DATE_SUB( NOW(), INTERVAL 5 MINUTE ) ) And B.LoggedOutAtDate Is Null And B.LoggedOutAtTime Is Null]]>
+  </sql-query>
+  
+  <sql-query name="searchOperators">
+    <![CDATA[Select A.*, B.Name As GroupName From tblOperator As A Inner Join tblGroup B ON B.Id = A.GroupId Where A.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <sql-query name="searchOperatorCount">
+    <return alias="group" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select Count( A.Id ) As Count From tblOperator A Inner Join tblGroup As B On B.Id = A.GroupId Where ( A.MaxSessions = :MaxSessions Or 1 = :MaxSessionsOptional ) And ( A.LastChangePassword = :LastChangePassword Or 1 = :LastChangePasswordOptional ) And ( A.NextChangePassword = :NextChangePassword Or 1 = :NextChangePasswordOptional ) And ( A.ChangePassword = :ChangePassword Or 1 = :ChangePasswordOptional ) And ( B.Name Like :GroupName Or 1 = :GroupNameOptional ) And ( A.GroupId = :GroupId Or 1 = :GroupIdOptional ) And ( A.Name Like :OperatorName Or 1 = :OperatorNameOptional ) And ( A.LastLoggedDate = :LastLoggedDate Or 1 = :LastLoggedDateOptional ) And ( A.LastLoggedTime = :LastLoggedTime Or 1 = :LastLoggedTimeOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.CreatedAtTime = :CreatedAtTime Or 1 = :CreatedAtTimeOptional ) And ( A.UpdatedAtDate = :UpdatedAtDate Or 1 = :UpdatedAtDateOptional ) And ( A.UpdatedAtTime = :UpdatedAtTime Or 1 = :UpdatedAtTimeOptional ) And ( A.DisabledAtDate = :DisabledAtDate Or 1 = :DisabledAtDateOptional ) And ( A.DisabledAtTime = :DisabledAtTime Or 1 = :DisabledAtTimeOptional ) And ( 1 = :DisabledOptional Or ( 0 = :Disabled And ( A.DisabledAtDate Is Null Or A.DisabledAtTime Is Null ) ) Or ( 1 = :Disabled And ( A.DisabledAtDate Is Not Null Or A.DisabledAtTime Is Not Null ) ) )]]>
+  </sql-query>
+
+  <sql-query name="searchOperator">
+    <return alias="group" class="coreapi.system.database.datamodels.TblOperator" />
+    <![CDATA[Select A.*, B.Name As GroupName From tblOperator A Inner Join tblGroup As B On B.Id = A.GroupId Where ( A.MaxSessions = :MaxSessions Or 1 = :MaxSessionsOptional ) And ( A.LastChangePassword = :LastChangePassword Or 1 = :LastChangePasswordOptional ) And ( A.NextChangePassword = :NextChangePassword Or 1 = :NextChangePasswordOptional ) And ( A.ChangePassword = :ChangePassword Or 1 = :ChangePasswordOptional ) And ( B.Name Like :GroupName Or 1 = :GroupNameOptional ) And ( A.GroupId = :GroupId Or 1 = :GroupIdOptional ) And ( A.Name Like :OperatorName Or 1 = :OperatorNameOptional ) And ( A.LastLoggedDate = :LastLoggedDate Or 1 = :LastLoggedDateOptional ) And ( A.LastLoggedTime = :LastLoggedTime Or 1 = :LastLoggedTimeOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.CreatedAtTime = :CreatedAtTime Or 1 = :CreatedAtTimeOptional ) And ( A.UpdatedAtDate = :UpdatedAtDate Or 1 = :UpdatedAtDateOptional ) And ( A.UpdatedAtTime = :UpdatedAtTime Or 1 = :UpdatedAtTimeOptional ) And ( A.DisabledAtDate = :DisabledAtDate Or 1 = :DisabledAtDateOptional ) And ( A.DisabledAtTime = :DisabledAtTime Or 1 = :DisabledAtTimeOptional ) And ( 1 = :DisabledOptional Or ( 0 = :Disabled And ( A.DisabledAtDate Is Null Or A.DisabledAtTime Is Null ) ) Or ( 1 = :Disabled And ( A.DisabledAtDate Is Not Null And A.DisabledAtTime Is Not Null ) ) )]]>
+  </sql-query>
+  
+  <!-- End of Query for Entity Operator -->
+
+  <!-- Start of Query for Entity tblSessionAlive -->
+
+  <sql-query name="getSessionAliveByOperatorIdAndSecurityTokenId">
+    <return alias="sessionalive" class="coreapi.system.database.datamodels.TblSessionAlive" />
+    <![CDATA[Select * From tblSessionAlive Where OperatorId = :OperatorId And SecurityTokenId = :SecurityTokenId]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblSessionAlive -->
+
+  <!-- Start of Query for Entity tblModule -->
+
+  <sql-query name="getModuleById">
+    <return alias="module" class="coreapi.system.database.datamodels.TblModule" />
+    <![CDATA[Select * From tblModule Where Id = :Id]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblModule -->
+
+  <!-- Start of Query for Entity tblModuleConfig -->
+
+  <sql-query name="getModuleConfigEntry">
+    <return alias="module" class="coreapi.system.database.datamodels.TblModuleConfig" />
+    <![CDATA[Select * From tblModuleConfig Where ( Id Like :Id Or 1 = :IdOptional ) And ModuleId = :ModuleId]]>
+  </sql-query>
+
+  <!-- Start of Query for Entity tblModuleConfig -->
+  
+  <!-- Start of Query for Entity tblAction -->
+
+  <sql-query name="getActionById">
+    <return alias="action" class="coreapi.system.database.datamodels.TblAction" />
+    <![CDATA[Select * From tblAction Where Id = :Id]]>
+  </sql-query>
+
+  <sql-query name="getActionByActionData">
+    <return alias="action" class="coreapi.system.database.datamodels.TblAction" />
+    <![CDATA[Select * From tblAction Where ActionData = :ActionData]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblAction -->
+
+  <!-- Start of Query for Entity tblGroupRole -->
+
+  <sql-query name="getGroupHasRoleToDoAction">
+    <![CDATA[Select A.RoleId From tblGroupRole As A Inner Join tblActionRole As B On B.RoleId = A.RoleId Where A.GroupId = :GroupId And B.ActionId = :ActionId]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblGroupRole -->
+  
+  <!-- Start of Query for Entity tblDevice -->
+
+  <sql-query name="getDeviceByHardOrSoftIdAndHardOrSoftType">
+    <return alias="device" class="coreapi.system.database.datamodels.TblDevice" />
+    <![CDATA[Select * From tblDevice Where HardOrSoftType = :HardOrSoftType And HardOrSoftId = :HardOrSoftId]]>
+  </sql-query>
+
+  <sql-query name="searchDevices">
+    <![CDATA[Select A.*, B.Name As OperatorName From tblDevice As A Inner Join tblOperator As B ON B.Id = A.OperatorId Where A.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <sql-query name="searchDevicesByOperator">
+    <![CDATA[Select A.*, B.Name As OperatorName From tblDevice As A Inner Join tblOperator As B ON B.Id = A.OperatorId Where B.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <sql-query name="searchDevicesCount">
+    <![CDATA[Select Count( A.Id ) As Count From tblDevice As A Where A.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <sql-query name="searchDevicesCountByOperator">
+    <![CDATA[Select Count( A.Id ) As Count From tblDevice As A Inner Join tblOperator As B ON B.Id = A.OperatorId Where B.:WhereFieldName01 :WhereOperator01 :WhereFieldValue01]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblDevice -->
+  
+  <!-- Start of Query for Entity tblNetworkClient -->
+
+  <sql-query name="getNetworkClientList">
+    <return alias="networkclient" class="coreapi.system.database.datamodels.TblNetworkClient" />
+    <![CDATA[Select A.* From tblNetworkClient As A Where A.UpdatedAtDate = :UpdatedAtDate Order By A.CreatedAtDate, A.CreatedAtTime]]>
+  </sql-query>
+
+  <sql-query name="getNetworkClientListCount">
+    <![CDATA[Select Count( A.Id ) As Count From tblNetworkClient As A Where A.UpdatedAtDate = :UpdatedAtDate]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblNetworkClient -->
+
+  <!-- Start of Query for Entity tblNetworkClientURI -->
+
+  <sql-query name="getNetworkClientURIListByRequestedAtDate">
+    <return alias="networkclientURI" class="coreapi.system.database.datamodels.TblNetworkClientURI" />
+    <![CDATA[Select A.* From tblNetworkClientURI As A Where A.RequestedAtDate = :RequestedAtDate Order By A.RequestedAtTime]]>
+  </sql-query>
+
+  <sql-query name="getNetworkClientURIListCountByRequestedAtDate">
+    <![CDATA[Select Count( A.NetworkClientId ) As Count From tblNetworkClientURI As A Where A.RequestedAtDate = :RequestedAtDate]]>
+  </sql-query>
+
+  <sql-query name="getNetworkClientURIList">
+    <return alias="networkclientURI" class="coreapi.system.database.datamodels.TblNetworkClientURI" />
+    <![CDATA[Select A.* From tblNetworkClientURI As A Where A.RequestedAtDate = :RequestedAtDate And A.NetworkClientId = :NetworkClientId Order By A.RequestedAtTime]]>
+  </sql-query>
+
+  <sql-query name="getNetworkClientURIListCount">
+    <![CDATA[Select Count( A.NetworkClientId ) As Count From tblNetworkClientURI As A Where A.RequestedAtDate = :RequestedAtDate And A.NetworkClientId = :NetworkClientId]]>
+  </sql-query>
+
+  <!-- End of Query for Entity tblNetworkClient -->
+
+  <!-- ***************************** End system query ************************************ -->
+  
+  <!-- *************************** Start business query ********************************** -->
+  
+  <!-- Start of Query for Entity tblShortMessageQueue -->
+  
+  <sql-query name="getPendingMessagesQueueByDeviceId">
+    <return alias="shortmessagequeue" class="smsgateway.database.datamodels.TblShortMessageQueue" />
+    <![CDATA[Select * From tblShortMessageQueue As A Where ( A.ToPhoneNumber <> '' ) And ( A.DeviceId Is Null Or A.DeviceId = :DeviceId ) And ( A.Context = :Context Or A.Context = '*' ) And ( A.State = 1 Or ( A.State = 2 And TIMESTAMP( A.LockAtDate, A.LockAtTime ) <= DATE_SUB( NOW(), INTERVAL 1 MINUTE ) ) ) And ( A.LockCount < 3 Or ( A.SendAtDate Is Null And A.SendAtTime Is Not Null ) ) And ( ( A.SendAtDate Is Null And A.SendAtTime Is Null ) Or ( TIMESTAMP( A.SendAtDate, A.SendAtTime ) <= NOW() And A.DeliveredAtDate <> CURDATE() ) Or ( A.SendAtDate Is Null And A.SendAtTime Is Not Null And TIMESTAMP( CURDATE(), A.SendAtTime ) <= NOW() And A.DeliveredAtDate <> CURDATE() ) ) And A.CanceledAtDate Is Null And A.CanceledAtTime Is Null Order By A.CreatedAtDate, A.CreatedAtTime]]>
+  </sql-query>
+  
+  <sql-query name="getPendingMessagesQueueByDeviceIdAndCreatedAtDate">
+    <return alias="shortmessagequeue" class="smsgateway.database.datamodels.TblShortMessageQueue" />
+    <![CDATA[Select * From tblShortMessageQueue As A Where ( A.ToPhoneNumber <> '' ) And ( A.DeviceId Is Null Or A.DeviceId = :DeviceId ) And ( A.Context = :Context Or A.Context = '*' ) And ( A.CreatedAtDate = :CreatedAtDate ) And ( A.State = 1 Or ( A.State = 2 And TIMESTAMP( A.LockAtDate, A.LockAtTime ) <= DATE_SUB( NOW(), INTERVAL 1 MINUTE ) ) ) And ( A.LockCount < 3 Or ( A.SendAtDate Is Null And A.SendAtTime Is Not Null ) ) And ( ( A.SendAtDate Is Null And A.SendAtTime Is Null ) Or ( TIMESTAMP( A.SendAtDate, A.SendAtTime ) <= NOW() And A.DeliveredAtDate <> CURDATE() ) Or ( A.SendAtDate Is Null And A.SendAtTime Is Not Null And TIMESTAMP( CURDATE(), A.SendAtTime ) <= NOW() And A.DeliveredAtDate <> CURDATE() ) ) And A.CanceledAtDate Is Null And A.CanceledAtTime Is Null Order By A.CreatedAtDate, A.CreatedAtTime]]>
+  </sql-query>
+
+  <sql-query name="getMessagesQueueByCreatedAtDate">
+    <![CDATA[Select A.*, B.Name As Operator, C.DeviceModel, C.DeviceDescription, C.PhoneNumber, D.DeviceModel As LockDeviceModel, D.DeviceDescription As LockDeviceDescription, D.PhoneNumber As LockPhoneNumber From tblShortMessageQueue As A Inner Join tblOperator As B On B.Id = A.OperatorId Left Outer Join tblDevice As C On C.Id = A.DeviceId Left Outer Join tblDevice As D On D.Id = A.LockDeviceId  Where A.CreatedAtDate = :CreatedAtDate Order By A.CreatedAtDate, A.CreatedAtTime]]>
+  </sql-query>
+
+  <sql-query name="purgeSMSQueue">
+    <return alias="shortmessagequeue" class="smsgateway.database.datamodels.TblShortMessageQueue" />
+    <![CDATA[Delete From tblShortMessageQueue Where ( DeviceId = :DeviceId Or 1 = :DeviceIdOptional ) And ( Context = :Context Or 1 = :ContextOptional ) And ( CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( State = :State Or 1 = :StateOptional )]]>
+  </sql-query>
+
+  <sql-query name="searchSMSQueueCount">
+    <return alias="shortmessagequeue" class="smsgateway.database.datamodels.TblShortMessageQueue" />
+    <![CDATA[Select Count( A.Id ) As Count From tblShortMessageQueue As A Where ( A.DeviceId = :DeviceId Or 1 = :DeviceIdOptional ) And ( A.Context = :Context Or 1 = :ContextOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.State = :State Or 1 = :StateOptional )]]>
+  </sql-query>
+
+  <sql-query name="searchSMSQueue">
+    <return alias="shortmessagequeue" class="smsgateway.database.datamodels.TblShortMessageQueue" />
+    <![CDATA[Select A.*, B.Name As OperatorName From tblShortMessageQueue As A Inner Join tblOperator As B On B.Id = A.OperatorId Where ( A.DeviceId = :DeviceId Or 1 = :DeviceIdOptional ) And ( A.Context = :Context Or 1 = :ContextOptional ) And ( A.CreatedAtDate = :CreatedAtDate Or 1 = :CreatedAtDateOptional ) And ( A.State = :State Or 1 = :StateOptional )]]>
+  </sql-query>
+  
+  <!-- End of Query for Entity tblShortMessageQueue -->
+
+  <!-- **************************** End business query *********************************** -->
+
+</hibernate-mapping>

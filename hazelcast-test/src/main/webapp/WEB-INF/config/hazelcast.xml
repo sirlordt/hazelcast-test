@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <network>
+    
+        <port>7000</port>
+    
+        <interfaces>
+            
+            <interface>127.0.0.1</interface>
+            
+        </interfaces>
+        
+    </network>
+    
+    <group>
+    
+        <name>configured-from-xml</name>
+        <password>1234</password>
+    
+    </group>
+    
+</hazelcast>
